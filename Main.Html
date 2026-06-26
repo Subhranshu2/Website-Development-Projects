@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAVEN — Curated Properties</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --slate: #0D1117;
+    --ivory: #F5EFE0;
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --sage: #7A8C7E;
+    --charcoal: #2A2F35;
+    --mid: #4A5058;
+    --border: rgba(201,168,76,0.2);
+    --glass: rgba(13,17,23,0.85);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--slate);
+    color: var(--ivory);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 48px;
+    background: transparent;
+    transition: background 0.4s, padding 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(13,17,23,0.95);
+    backdrop-filter: blur(12px);
+    padding: 18px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600;
+    letter-spacing: 0.25em;
+    color: var(--gold); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-size: 12px; letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ivory); text-decoration: none;
+    opacity: 0.7; transition: opacity 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold); }
+  .nav-cta {
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--slate); background: var(--gold);
+    padding: 10px 22px; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* ── HERO ── */
+  #hero {
+    height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 48px 72px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(13,17,23,0.3) 0%, rgba(13,17,23,0.1) 40%, rgba(13,17,23,0.75) 85%),
+      url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=80') center/cover no-repeat;
+    transform: scale(1.04);
+    transition: transform 8s ease-out;
+  }
+  #hero.loaded .hero-bg { transform: scale(1); }
+  .hero-eyebrow {
+    font-size: 11px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 20px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 7vw, 100px);
+    font-weight: 300; line-height: 0.95;
+    color: var(--ivory); max-width: 780px; margin-bottom: 32px;
+  }
+  .hero-title em { font-style: italic; color: var(--gold); }
+  .hero-sub {
+    font-size: 14px; color: rgba(245,239,224,0.65);
+    max-width: 440px; line-height: 1.8; margin-bottom: 40px;
+  }
+  .hero-actions { display: flex; gap: 16px; align-items: center; }
+  .btn-primary {
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--slate);
+    background: var(--gold); padding: 14px 32px;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.15s; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-ghost {
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ivory);
+    background: transparent; padding: 14px 32px;
+    text-decoration: none; border: 1px solid rgba(245,239,224,0.3);
+    cursor: pointer; transition: border-color 0.2s, color 0.2s; display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+  .hero-ticker {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: var(--gold); height: 36px;
+    display: flex; align-items: center; overflow: hidden;
+  }
+  .ticker-track {
+    display: flex; gap: 64px; white-space: nowrap;
+    animation: ticker 28s linear infinite;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--slate); padding-left: 100%;
+  }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── SECTION COMMONS ── */
+  section { padding: 120px 48px; }
+  .section-label {
+    font-size: 10px; letter-spacing: 0.35em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 16px; display: block;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 58px);
+    font-weight: 300; line-height: 1.1; margin-bottom: 16px;
+  }
+  .section-divider { width: 48px; height: 1px; background: var(--gold); margin: 24px 0; }
+
+  /* ── AI SEARCH ── */
+  #search { background: var(--charcoal); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .search-inner { max-width: 860px; margin: 0 auto; text-align: center; }
+  .search-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 3.5vw, 52px);
+    font-weight: 300; margin-bottom: 12px;
+  }
+  .search-title em { font-style: italic; color: var(--gold); }
+  .search-sub { font-size: 14px; color: rgba(245,239,224,0.5); margin-bottom: 40px; line-height: 1.8; }
+  .search-box {
+    display: flex; gap: 0;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    transition: border-color 0.25s; margin-bottom: 16px;
+  }
+  .search-box:focus-within { border-color: var(--gold); }
+  .search-box textarea {
+    flex: 1; background: transparent; border: none; outline: none;
+    padding: 20px 24px;
+    font-family: 'DM Sans', sans-serif; font-size: 15px;
+    color: var(--ivory); resize: none; min-height: 72px; line-height: 1.6;
+  }
+  .search-box textarea::placeholder { color: rgba(245,239,224,0.3); }
+  .search-btn {
+    background: var(--gold); border: none; padding: 0 28px;
+    cursor: pointer; color: var(--slate);
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif; font-weight: 500;
+    white-space: nowrap; transition: background 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .search-btn:hover { background: var(--gold-light); }
+  .search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .search-suggestions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .suggestion-chip {
+    font-size: 11px; letter-spacing: 0.08em;
+    padding: 7px 14px; border: 1px solid var(--border);
+    color: rgba(245,239,224,0.5); cursor: pointer;
+    background: transparent; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .suggestion-chip:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── AI RESULTS ── */
+  #ai-results {
+    display: none; background: var(--slate);
+    padding: 80px 48px; border-bottom: 1px solid var(--border);
+  }
+  #ai-results.visible { display: block; }
+  .ai-results-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 40px;
+  }
+  .ai-results-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; }
+  .ai-thinking { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--gold); }
+  .thinking-dots span {
+    display: inline-block; width: 5px; height: 5px;
+    background: var(--gold); border-radius: 50%;
+    animation: dot-pulse 1.4s ease-in-out infinite;
+  }
+  .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dot-pulse { 0%,80%,100%{transform:scale(0.6);opacity:0.4} 40%{transform:scale(1);opacity:1} }
+  #ai-narrative {
+    font-size: 15px; color: rgba(245,239,224,0.7);
+    line-height: 1.9; max-width: 760px; margin-bottom: 48px;
+    border-left: 2px solid var(--gold); padding-left: 20px;
+  }
+  .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
+
+  /* ── PROPERTY CARD ── */
+  .property-card {
+    background: var(--charcoal); border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden; cursor: pointer;
+    transition: transform 0.3s, border-color 0.3s; position: relative;
+  }
+  .property-card:hover { transform: translateY(-4px); border-color: var(--gold); }
+  .card-image { height: 240px; overflow: hidden; position: relative; background: var(--mid); }
+  .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; display: block; }
+  .property-card:hover .card-image img { transform: scale(1.06); }
+  .card-badge {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--gold); color: var(--slate);
+    font-size: 9px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; padding: 4px 10px;
+  }
+  .card-body { padding: 24px; }
+  .card-price { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; color: var(--gold); margin-bottom: 6px; }
+  .card-address { font-size: 13px; color: rgba(245,239,224,0.5); margin-bottom: 16px; line-height: 1.5; }
+  .card-specs {
+    display: flex; gap: 20px; font-size: 12px;
+    color: rgba(245,239,224,0.45); letter-spacing: 0.05em;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 14px; margin-top: 4px;
+  }
+  .card-spec { display: flex; align-items: center; gap: 5px; }
+  .card-match {
+    position: absolute; top: 14px; right: 14px;
+    background: rgba(13,17,23,0.88); backdrop-filter: blur(8px);
+    border: 1px solid var(--gold); font-size: 10px;
+    letter-spacing: 0.1em; color: var(--gold); padding: 4px 10px;
+  }
+
+  /* ── FEATURED LISTINGS ── */
+  #listings { background: var(--slate); }
+  .listings-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto; gap: 2px; margin-top: 56px;
+  }
+  .listing-feature { grid-column: 1; grid-row: 1 / 3; position: relative; height: 680px; overflow: hidden; cursor: pointer; }
+  .listing-sm { position: relative; height: 338px; overflow: hidden; cursor: pointer; }
+  .listing-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; display: block; }
+  .listing-feature:hover .listing-img, .listing-sm:hover .listing-img { transform: scale(1.05); }
+  .listing-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13,17,23,0.88) 0%, transparent 55%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 32px; transition: background 0.4s;
+  }
+  .listing-feature:hover .listing-overlay, .listing-sm:hover .listing-overlay {
+    background: linear-gradient(to top, rgba(13,17,23,0.92) 0%, transparent 45%);
+  }
+  .listing-type { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .listing-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; line-height: 1.2; margin-bottom: 6px; }
+  .listing-sm .listing-name { font-size: 20px; }
+  .listing-loc { font-size: 12px; color: rgba(245,239,224,0.5); margin-bottom: 14px; }
+  .listing-price { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--gold); font-weight: 500; }
+
+  /* ── STATS ── */
+  #stats { background: var(--charcoal); border-top: 1px solid var(--border); }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--border); }
+  .stat-item { padding: 52px 40px; border-right: 1px solid var(--border); text-align: center; }
+  .stat-item:last-child { border-right: none; }
+  .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 58px; font-weight: 300; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+  .stat-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,239,224,0.4); }
+
+  /* ── AGENTS ── */
+  #agents { background: var(--slate); }
+  .agents-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 56px; }
+  .agents-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .agent-card { border: 1px solid rgba(255,255,255,0.06); overflow: hidden; transition: border-color 0.3s; cursor: pointer; }
+  .agent-card:hover { border-color: var(--gold); }
+  .agent-photo { height: 320px; overflow: hidden; background: var(--charcoal); }
+  .agent-photo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%); transition: transform 0.6s, filter 0.4s; display: block; }
+  .agent-card:hover .agent-photo img { transform: scale(1.04); filter: grayscale(0%); }
+  .agent-info { padding: 22px 24px; }
+  .agent-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 4px; }
+  .agent-title { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+  .agent-stats { display: flex; gap: 24px; font-size: 12px; color: rgba(245,239,224,0.4); }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--charcoal); border-top: 1px solid var(--border); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .field label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,239,224,0.4); }
+  .field input, .field textarea, .field select {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    padding: 13px 16px; color: var(--ivory);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--gold); }
+  .field input::placeholder, .field textarea::placeholder { color: rgba(245,239,224,0.25); }
+  .field select { cursor: pointer; }
+  .field select option { background: var(--charcoal); }
+  .field textarea { min-height: 120px; resize: none; }
+  .contact-info { padding-top: 24px; }
+  .contact-detail { margin-bottom: 32px; }
+  .contact-detail-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .contact-detail-value { font-size: 15px; color: rgba(245,239,224,0.7); line-height: 1.7; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--slate); border-top: 1px solid var(--border);
+    padding: 48px; display: flex;
+    justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 24px;
+  }
+  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; letter-spacing: 0.25em; color: var(--gold); }
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(245,239,224,0.35); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy { font-size: 11px; color: rgba(245,239,224,0.25); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(13,17,23,0.9); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 40px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--charcoal); border: 1px solid var(--border);
+    max-width: 780px; width: 100%;
+    max-height: 88vh; overflow-y: auto; position: relative;
+  }
+  .modal-hero { height: 380px; overflow: hidden; position: relative; }
+  .modal-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .modal-hero-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, var(--charcoal) 0%, transparent 60%);
+    padding: 32px; display: flex; align-items: flex-end; justify-content: space-between;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: rgba(13,17,23,0.7); border: 1px solid var(--border);
+    color: var(--ivory); width: 36px; height: 36px;
+    cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s;
+  }
+  .modal-close:hover { border-color: var(--gold); color: var(--gold); }
+  .modal-body { padding: 32px; }
+  .modal-price { font-family: 'Cormorant Garamond', serif; font-size: 36px; color: var(--gold); }
+  .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; margin-bottom: 6px; }
+  .modal-desc { font-size: 14px; color: rgba(245,239,224,0.6); line-height: 1.9; margin: 20px 0; }
+  .modal-features {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; margin: 24px 0;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 20px 0;
+  }
+  .modal-feature { text-align: center; }
+  .modal-feature-val { font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--gold); }
+  .modal-feature-lbl { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(245,239,224,0.4); margin-top: 4px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--gold); color: var(--slate);
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 12px 28px; z-index: 300;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    #hero { padding: 0 24px 80px; }
+    .listings-grid { grid-template-columns: 1fr; }
+    .listing-feature { height: 480px; grid-row: auto; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .stat-item:nth-child(2) { border-right: none; }
+    .agents-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; text-align: center; padding: 32px 24px; }
+    .modal-overlay { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">HAVEN</a>
+  <ul class="nav-links">
+    <li><a href="#search">AI Search</a></li>
+    <li><a href="#listings">Listings</a></li>
+    <li><a href="#agents">Our Team</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Book Viewing</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <span class="hero-eyebrow">Curated luxury real estate</span>
+  <h1 class="hero-title">Where architecture<br>meets <em>desire.</em></h1>
+  <p class="hero-sub">Haven presents an exclusive collection of residences defined by exceptional design, rare locations, and enduring value.</p>
+  <div class="hero-actions">
+    <a href="#search" class="btn-primary">Search with AI</a>
+    <a href="#listings" class="btn-ghost">View Listings</a>
+  </div>
+  <div class="hero-ticker">
+    <div class="ticker-track" id="tickerTrack">
+      <span>New Listing — Ocean Residence · Malibu, CA · $8.4M</span>
+      <span>Just Sold — Penthouse · Manhattan, NY · $14.2M</span>
+      <span>Price Reduced — Villa Estate · Tuscany, IT · €6.8M</span>
+      <span>Featured — Glass House · Kyoto, JP · ¥840M</span>
+      <span>New Listing — Cliffside Retreat · Santorini, GR · €4.1M</span>
+      <span>Under Offer — Urban Loft · Chicago, IL · $2.9M</span>
+      <span>New Listing — Ocean Residence · Malibu, CA · $8.4M</span>
+      <span>Just Sold — Penthouse · Manhattan, NY · $14.2M</span>
+      <span>Price Reduced — Villa Estate · Tuscany, IT · €6.8M</span>
+      <span>Featured — Glass House · Kyoto, JP · ¥840M</span>
+      <span>New Listing — Cliffside Retreat · Santorini, GR · €4.1M</span>
+      <span>Under Offer — Urban Loft · Chicago, IL · $2.9M</span>
+    </div>
+  </div>
+</section>
+
+<!-- AI SEARCH -->
+<section id="search">
+  <div class="search-inner">
+    <span class="section-label">Powered by AI</span>
+    <h2 class="search-title">Find your <em>perfect</em> property</h2>
+    <p class="search-sub">Describe your ideal home in plain language — our AI will match you with properties that fit your vision, lifestyle, and budget.</p>
+    <div class="search-box">
+      <textarea id="searchInput" placeholder="e.g. A modern 4-bedroom with ocean views, open-plan living, and a pool under $5M in California..." rows="2"></textarea>
+      <button class="search-btn" id="searchBtn" onclick="runAISearch()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Search
+      </button>
+    </div>
+    <div class="search-suggestions">
+      <button class="suggestion-chip" onclick="fillSearch('Oceanfront villa with pool, 5+ beds, under $10M')">Oceanfront villa</button>
+      <button class="suggestion-chip" onclick="fillSearch('Modern penthouse in a city centre with rooftop terrace')">City penthouse</button>
+      <button class="suggestion-chip" onclick="fillSearch('Rustic countryside estate with land and a guest house in Europe')">European estate</button>
+      <button class="suggestion-chip" onclick="fillSearch('Minimalist architect-designed home with mountain views')">Mountain retreat</button>
+    </div>
+  </div>
+</section>
+
+<!-- AI RESULTS -->
+<div id="ai-results">
+  <div class="ai-results-header">
+    <h3 class="ai-results-title" id="resultsTitle">Matching Properties</h3>
+    <div class="ai-thinking" id="thinkingIndicator" style="display:none">
+      <span>Haven AI is thinking</span>
+      <div class="thinking-dots"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+  <p id="ai-narrative"></p>
+  <div class="results-grid" id="resultsGrid"></div>
+</div>
+
+<!-- FEATURED LISTINGS -->
+<section id="listings">
+  <div class="reveal">
+    <span class="section-label">Featured Properties</span>
+    <h2 class="section-title">Handpicked by our<br>curators this season</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="listings-grid reveal">
+    <div class="listing-feature" onclick="openModal('feature1')">
+      <img class="listing-img" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80" alt="Malibu Cliffside" loading="lazy">
+      <div class="listing-overlay">
+        <div>
+          <div class="listing-type">Residential · For Sale</div>
+          <div class="listing-name">The Cliffside<br>Malibu Residence</div>
+          <div class="listing-loc">21450 Pacific Coast Hwy, Malibu, CA</div>
+          <div class="listing-price">$8,400,000</div>
+        </div>
+      </div>
+    </div>
+    <div class="listing-sm" onclick="openModal('listing2')">
+      <img class="listing-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Beverly Hills" loading="lazy">
+      <div class="listing-overlay">
+        <div>
+          <div class="listing-type">Residential · For Sale</div>
+          <div class="listing-name">Trousdale Estates Villa</div>
+          <div class="listing-loc">Beverly Hills, CA</div>
+          <div class="listing-price">$12,750,000</div>
+        </div>
+      </div>
+    </div>
+    <div class="listing-sm" onclick="openModal('listing3')">
+      <img class="listing-img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80" alt="Modern House" loading="lazy">
+      <div class="listing-overlay">
+        <div>
+          <div class="listing-type">Residential · For Sale</div>
+          <div class="listing-name">Glass Pavilion, Montecito</div>
+          <div class="listing-loc">Montecito, Santa Barbara, CA</div>
+          <div class="listing-price">$6,200,000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-grid reveal">
+    <div class="stat-item"><div class="stat-number">$4.2B</div><div class="stat-label">Total Sales Volume</div></div>
+    <div class="stat-item"><div class="stat-number">1,400+</div><div class="stat-label">Properties Sold</div></div>
+    <div class="stat-item"><div class="stat-number">18</div><div class="stat-label">Years of Excellence</div></div>
+    <div class="stat-item"><div class="stat-number">97%</div><div class="stat-label">Client Satisfaction</div></div>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section id="agents">
+  <div class="agents-header reveal">
+    <div>
+      <span class="section-label">Our Specialists</span>
+      <h2 class="section-title">The team behind<br>every transaction</h2>
+    </div>
+    <a href="#contact" class="btn-ghost">Work With Us</a>
+  </div>
+  <div class="agents-grid reveal">
+    <div class="agent-card">
+      <div class="agent-photo"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" alt="James Whitmore" loading="lazy"></div>
+      <div class="agent-info">
+        <div class="agent-name">James Whitmore</div>
+        <div class="agent-title">Senior Partner, Malibu & Pacific Palisades</div>
+        <div class="agent-stats"><span>$1.2B sold</span><span>212 listings</span></div>
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-photo"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80" alt="Sofia Andreou" loading="lazy"></div>
+      <div class="agent-info">
+        <div class="agent-name">Sofia Andreou</div>
+        <div class="agent-title">Lead Agent, Beverly Hills & Bel Air</div>
+        <div class="agent-stats"><span>$940M sold</span><span>178 listings</span></div>
+      </div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-photo"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&q=80" alt="Marcus Chen" loading="lazy"></div>
+      <div class="agent-info">
+        <div class="agent-name">Marcus Chen</div>
+        <div class="agent-title">International Portfolio Director</div>
+        <div class="agent-stats"><span>$820M sold</span><span>143 listings</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid reveal">
+    <div>
+      <span class="section-label">Get In Touch</span>
+      <h2 class="section-title">Begin your<br>property journey</h2>
+      <div class="section-divider"></div>
+      <div class="contact-info">
+        <div class="contact-detail">
+          <div class="contact-detail-label">Office</div>
+          <div class="contact-detail-value">9899 Santa Monica Blvd<br>Beverly Hills, CA 90210</div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-label">Phone</div>
+          <div class="contact-detail-value">+1 (310) 555 0192</div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-label">Email</div>
+          <div class="contact-detail-value">hello@haven-properties.com</div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-label">Hours</div>
+          <div class="contact-detail-value">Mon – Sat · 9am – 7pm PST</div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="field"><label>First Name</label><input type="text" placeholder="James"></div>
+        <div class="field"><label>Last Name</label><input type="text" placeholder="Whitmore"></div>
+      </div>
+      <div class="field"><label>Email Address</label><input type="email" placeholder="hello@example.com"></div>
+      <div class="field"><label>Phone (optional)</label><input type="tel" placeholder="+1 (000) 000 0000"></div>
+      <div class="field">
+        <label>I'm interested in</label>
+        <select>
+          <option>Buying a property</option>
+          <option>Selling my property</option>
+          <option>Private valuation</option>
+          <option>Investment portfolio</option>
+          <option>Rental management</option>
+        </select>
+      </div>
+      <div class="field"><label>Your Message</label><textarea placeholder="Tell us about your ideal property or how we can help..."></textarea></div>
+      <button class="btn-primary" onclick="submitForm()" style="align-self:flex-start">Send Enquiry</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">HAVEN</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Sitemap</a>
+    <a href="#">Careers</a>
+  </div>
+  <div class="footer-copy">© 2025 Haven Properties. All rights reserved.</div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-hero">
+      <img id="modalImg" src="" alt="">
+      <div class="modal-hero-overlay">
+        <div class="modal-price" id="modalPrice"></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <h3 class="modal-title" id="modalTitle"></h3>
+      <div style="font-size:12px;color:var(--sage);letter-spacing:0.1em;margin-bottom:4px" id="modalLoc"></div>
+      <div class="modal-features">
+        <div class="modal-feature"><div class="modal-feature-val" id="mBeds">—</div><div class="modal-feature-lbl">Bedrooms</div></div>
+        <div class="modal-feature"><div class="modal-feature-val" id="mBaths">—</div><div class="modal-feature-lbl">Bathrooms</div></div>
+        <div class="modal-feature"><div class="modal-feature-val" id="mSqft">—</div><div class="modal-feature-lbl">Sq Ft</div></div>
+      </div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <a href="#contact" class="btn-primary" onclick="closeModalDirect();scrollToContact()">Enquire About This Property</a>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── LISTING DATA ──
+const listings = {
+  feature1: {
+    img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80',
+    price: '$8,400,000',
+    title: 'The Cliffside Malibu Residence',
+    loc: '21450 Pacific Coast Hwy, Malibu, CA 90265',
+    beds: 5, baths: 6, sqft: '7,200',
+    desc: 'Perched above the Pacific on a private bluff, this extraordinary oceanfront estate delivers uninterrupted panoramic views from every principal room. Designed by a Pritzker-shortlisted architect, the residence unfolds across a single dramatic floor plate: a great room anchored by a floating limestone fireplace, a chef\'s kitchen sheathed in Calacatta marble, and five serene bedroom suites each with their own terrace. The infinity pool vanishes into the horizon at sunset. Accessed via a private gated drive, this is Malibu at its most coveted.'
+  },
+  listing2: {
+    img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80',
+    price: '$12,750,000',
+    title: 'Trousdale Estates Villa',
+    loc: '1487 Coldwater Canyon Drive, Beverly Hills, CA 90210',
+    beds: 6, baths: 8, sqft: '9,400',
+    desc: 'An iconic mid-century modernist villa sits at the crown of Trousdale Estates, commanding sweep views from downtown Los Angeles to the Pacific. Six bedroom suites, a screening room, a wine cellar with 2,000-bottle capacity, and a resort-style pool terrace with full outdoor kitchen. The estate has been immaculately maintained and thoughtfully updated while preserving its landmark original details — terrazzo floors, tongue-and-groove ceilings, and signature clerestory glazing that fills the interior with California light.'
+  },
+  listing3: {
+    img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80',
+    price: '$6,200,000',
+    title: 'Glass Pavilion, Montecito',
+    loc: 'East Valley Road, Montecito, Santa Barbara, CA 93108',
+    beds: 4, baths: 5, sqft: '5,800',
+    desc: 'Set amid two acres of mature gardens abutting a protected creek, this contemporary glass pavilion achieves a seamless union of architecture and landscape. Floor-to-ceiling glazing dissolves the boundary between interior and exterior; the living spaces flow directly onto broad sandstone terraces, a heated lap pool, and a Japanese-inspired meditation garden. Four bedroom suites, a dedicated study, and a purpose-built art studio with north-facing clerestory light. A ten-minute drive to the village of Montecito and private school row.'
+  }
+};
+
+// ── AI SEARCH MOCK DATA ──
+const mockProperties = [
+  { id:'ai1', type:'Oceanfront', badge:'New Listing', price:'$5,950,000', address:'12 Seacliff Drive, Laguna Beach, CA 92651', beds:4, baths:4, sqft:'4,200', match:'96% match', img:'https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=800&q=80' },
+  { id:'ai2', type:'Villa', badge:'Featured', price:'$4,200,000', address:'881 Via Lido, Newport Beach, CA 92663', beds:5, baths:5, sqft:'5,100', match:'91% match', img:'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800&q=80' },
+  { id:'ai3', type:'Modern Estate', badge:'Price Reduced', price:'$7,800,000', address:'34 Bluff Road, Del Mar, CA 92014', beds:6, baths:7, sqft:'7,600', match:'87% match', img:'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80' },
+  { id:'ai4', type:'Contemporary', badge:'Under Offer', price:'$3,400,000', address:'220 Prospect Street, La Jolla, CA 92037', beds:4, baths:4, sqft:'3,800', match:'82% match', img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80' }
+];
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── HERO LOAD ANIMATION ──
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('hero').classList.add('loaded'), 100);
+});
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── AI SEARCH ──
+function fillSearch(text) {
+  document.getElementById('searchInput').value = text;
+  document.getElementById('searchInput').focus();
+}
+
+async function runAISearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  if (!query) { showToast('Please describe your ideal property'); return; }
+
+  const btn = document.getElementById('searchBtn');
+  const resultsDiv = document.getElementById('ai-results');
+  const narrative = document.getElementById('ai-narrative');
+  const grid = document.getElementById('resultsGrid');
+  const thinking = document.getElementById('thinkingIndicator');
+
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Searching';
+
+  resultsDiv.classList.add('visible');
+  thinking.style.display = 'flex';
+  narrative.textContent = '';
+  grid.innerHTML = '';
+
+  document.getElementById('resultsTitle').textContent = 'Analysing your brief…';
+  resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: `You are Haven, a luxury real estate AI concierge. A client has described their ideal property. Write a warm, expert, 2-3 sentence response acknowledging their brief, highlighting what you've understood, and setting up the property matches below. Be sophisticated and specific — refer to actual details they mentioned. Use the voice of a discerning estate agent. End with one elegant sentence about the selection. Never use bullet points. Write ONLY the narrative paragraph, nothing else.`,
+        messages: [{ role: 'user', content: `Client brief: "${query}"` }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text || "We've curated a selection of properties that match your vision with precision.";
+
+    thinking.style.display = 'none';
+    document.getElementById('resultsTitle').textContent = `${mockProperties.length} Properties Found`;
+    narrative.textContent = text;
+
+    mockProperties.forEach((p, i) => {
+      setTimeout(() => {
+        const card = document.createElement('div');
+        card.className = 'property-card reveal';
+        card.onclick = () => {
+          listings['aiTemp'] = {
+            img: p.img, price: p.price,
+            title: p.type + ' · ' + p.address.split(',')[0],
+            loc: p.address, beds: p.beds, baths: p.baths, sqft: p.sqft,
+            desc: `A beautifully presented ${p.type.toLowerCase()} with ${p.beds} bedrooms and ${p.baths} bathrooms across ${p.sqft} sq ft. Located in ${p.address.split(',').slice(1).join(',').trim()}, offering exceptional finishes and lifestyle amenities to match your brief.`
+          };
+          openModal('aiTemp');
+        };
+        card.innerHTML = `
+          <div class="card-image">
+            <img src="${p.img}" alt="${p.type}" loading="lazy">
+            <div class="card-badge">${p.badge}</div>
+            <div class="card-match">${p.match}</div>
+          </div>
+          <div class="card-body">
+            <div class="card-price">${p.price}</div>
+            <div class="card-address">${p.address}</div>
+            <div class="card-specs">
+              <span class="card-spec">🛏 ${p.beds} beds</span>
+              <span class="card-spec">🚿 ${p.baths} baths</span>
+              <span class="card-spec">📐 ${p.sqft} sf</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+        setTimeout(() => card.classList.add('visible'), 50);
+      }, i * 150);
+    });
+
+  } catch (err) {
+    thinking.style.display = 'none';
+    narrative.textContent = "We've curated a selection of properties that align closely with your vision.";
+    document.getElementById('resultsTitle').textContent = `${mockProperties.length} Properties Found`;
+    mockProperties.forEach((p, i) => {
+      setTimeout(() => {
+        const card = document.createElement('div');
+        card.className = 'property-card reveal';
+        card.onclick = () => {
+          listings['aiTemp'] = {
+            img: p.img, price: p.price, title: p.type,
+            loc: p.address, beds: p.beds, baths: p.baths, sqft: p.sqft,
+            desc: `A superb ${p.type.toLowerCase()} offering ${p.beds} bedrooms and ${p.baths} bathrooms across ${p.sqft} sq ft in a prime location.`
+          };
+          openModal('aiTemp');
+        };
+        card.innerHTML = `
+          <div class="card-image">
+            <img src="${p.img}" alt="${p.type}" loading="lazy">
+            <div class="card-badge">${p.badge}</div>
+            <div class="card-match">${p.match}</div>
+          </div>
+          <div class="card-body">
+            <div class="card-price">${p.price}</div>
+            <div class="card-address">${p.address}</div>
+            <div class="card-specs">
+              <span class="card-spec">🛏 ${p.beds} beds</span>
+              <span class="card-spec">🚿 ${p.baths} baths</span>
+              <span class="card-spec">📐 ${p.sqft} sf</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+        setTimeout(() => card.classList.add('visible'), 50);
+      }, i * 120);
+    });
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Search';
+}
+
+// Enter key triggers search
+document.getElementById('searchInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runAISearch(); }
+});
+
+// ── MODAL ──
+function openModal(id) {
+  const p = listings[id]; if (!p) return;
+  document.getElementById('modalImg').src = p.img;
+  document.getElementById('modalPrice').textContent = p.price;
+  document.getElementById('modalTitle').textContent = p.title;
+  document.getElementById('modalLoc').textContent = p.loc;
+  document.getElementById('mBeds').textContent = p.beds;
+  document.getElementById('mBaths').textContent = p.baths;
+  document.getElementById('mSqft').textContent = p.sqft;
+  document.getElementById('modalDesc').textContent = p.desc;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function scrollToContact() {
+  setTimeout(() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }), 200);
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+// ── FORM ──
+function submitForm() {
+  showToast('Enquiry sent — we\'ll be in touch shortly');
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>
