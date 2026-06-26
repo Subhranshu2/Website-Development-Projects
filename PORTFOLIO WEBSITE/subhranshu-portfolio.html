@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subhranshu Kar — Software Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0E14;
+  --bg2: #0F1520;
+  --bg3: #1C2330;
+  --cyan: #00D9FF;
+  --cyan-dim: rgba(0,217,255,0.12);
+  --cyan-glow: rgba(0,217,255,0.25);
+  --teal: #1ABCB4;
+  --white: #E8EDF2;
+  --muted: #6B7A8F;
+  --border: rgba(0,217,255,0.12);
+  --slate: #3D4A5C;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ── CURSOR GLOW ── */
+.cursor-glow {
+  position: fixed;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,217,255,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  transition: transform 0.1s;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 60px;
+  transition: all 0.4s;
+}
+nav.scrolled {
+  background: rgba(10,14,20,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 60px;
+}
+.nav-logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--cyan);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::before {
+  content: './';
+  color: var(--cyan);
+  opacity: 0;
+  transition: opacity 0.2s;
+  margin-right: 2px;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::before { opacity: 1; }
+.nav-hire {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  padding: 8px 20px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-hire:hover { background: var(--cyan); color: var(--bg); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 120px 60px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,217,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,217,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at 30% 50%, black 30%, transparent 80%);
+}
+.hero-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  margin-bottom: 28px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-tag::before {
+  content: '';
+  display: inline-block;
+  width: 32px; height: 1px;
+  background: var(--cyan);
+}
+.hero-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(52px, 7vw, 96px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  color: var(--white);
+}
+.hero-name .highlight { color: var(--cyan); }
+.hero-role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(16px, 2vw, 22px);
+  color: var(--muted);
+  margin-bottom: 32px;
+  min-height: 32px;
+}
+.hero-role .cursor {
+  display: inline-block;
+  width: 2px; height: 1.1em;
+  background: var(--cyan);
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.hero-desc {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.8;
+  margin-bottom: 48px;
+}
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.btn-cyan {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--bg);
+  background: var(--cyan);
+  padding: 14px 28px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-cyan:hover {
+  box-shadow: 0 0 24px var(--cyan-glow);
+  transform: translateY(-2px);
+}
+.btn-outline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  background: transparent;
+  padding: 14px 28px;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-outline:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+
+.hero-stats {
+  position: absolute; right: 60px; bottom: 60px;
+  display: flex; flex-direction: column; gap: 28px;
+  text-align: right;
+}
+.hero-stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px; font-weight: 700;
+  color: var(--cyan); line-height: 1;
+}
+.hero-stat-lbl {
+  font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ── SECTION ── */
+section { padding: 100px 60px; position: relative; }
+.s-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--cyan);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+}
+.s-label::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 60px; }
+.s-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 700; line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 48px;
+}
+.s-title em { font-style: normal; color: var(--cyan); }
+
+/* ── ABOUT ── */
+#about { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.about-text p { font-size: 15px; color: rgba(232,237,242,0.7); line-height: 1.9; margin-bottom: 20px; }
+.about-text p:last-child { margin-bottom: 0; }
+.about-highlight {
+  background: var(--cyan-dim);
+  border-left: 2px solid var(--cyan);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--cyan);
+  line-height: 1.7;
+}
+.about-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 32px;
+}
+.edu-item { margin-bottom: 28px; }
+.edu-item:last-child { margin-bottom: 0; }
+.edu-degree {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px; font-weight: 600;
+  color: var(--white); margin-bottom: 4px;
+}
+.edu-spec { font-size: 13px; color: var(--cyan); margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+.edu-meta { font-size: 12px; color: var(--muted); }
+.card-divider { height: 1px; background: var(--border); margin: 24px 0; }
+.contact-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: rgba(232,237,242,0.6);
+}
+.contact-row a { color: var(--cyan); text-decoration: none; }
+.contact-row a:hover { text-decoration: underline; }
+.contact-icon {
+  width: 28px; height: 28px;
+  background: var(--cyan-dim);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0;
+  color: var(--cyan);
+}
+
+/* ── SKILLS ── */
+#skills { background: var(--bg); }
+.skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.skill-group {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 24px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.skill-group:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px var(--cyan-dim);
+}
+.skill-group-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--cyan);
+  margin-bottom: 16px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.skill-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.05em;
+  color: rgba(232,237,242,0.7);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 5px 12px;
+  transition: all 0.2s;
+  cursor: default;
+}
+.chip:hover {
+  color: var(--cyan);
+  border-color: var(--cyan);
+  background: var(--cyan-dim);
+  box-shadow: 0 0 8px var(--cyan-dim);
+}
+
+/* ── PROJECTS ── */
+#projects { background: var(--bg2); border-top: 1px solid var(--border); }
+.projects-bento {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(220px, auto);
+  gap: 16px;
+}
+.project-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.project-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--teal));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.project-card:hover {
+  border-color: rgba(0,217,255,0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.project-card:hover::before { opacity: 1; }
+.project-card.wide { grid-column: span 2; }
+.project-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--cyan);
+  opacity: 0.5; margin-bottom: 16px;
+}
+.project-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px; font-weight: 600;
+  color: var(--white); margin-bottom: 10px;
+  line-height: 1.2;
+}
+.project-desc { font-size: 13px; color: var(--muted); line-height: 1.7; flex: 1; margin-bottom: 20px; }
+.project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.project-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.05em;
+  color: var(--teal);
+  background: rgba(26,188,180,0.08);
+  border: 1px solid rgba(26,188,180,0.2);
+  padding: 3px 8px;
+}
+.project-arrow {
+  position: absolute; top: 24px; right: 24px;
+  color: var(--muted); font-size: 16px;
+  transition: color 0.2s, transform 0.2s;
+}
+.project-card:hover .project-arrow { color: var(--cyan); transform: translate(2px, -2px); }
+
+/* ── EXPERIENCE / TIMELINE ── */
+#experience { background: var(--bg); }
+.timeline { position: relative; padding-left: 32px; }
+.timeline::before {
+  content: '';
+  position: absolute; left: 0; top: 8px; bottom: 8px;
+  width: 1px; background: var(--border);
+}
+.timeline-item { position: relative; margin-bottom: 48px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-dot {
+  position: absolute; left: -38px; top: 6px;
+  width: 12px; height: 12px;
+  border: 2px solid var(--cyan);
+  background: var(--bg);
+  border-radius: 50%;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.timeline-item:hover .timeline-dot {
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan);
+}
+.timeline-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--cyan);
+  letter-spacing: 0.1em; margin-bottom: 8px;
+}
+.timeline-role {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px; font-weight: 600;
+  color: var(--white); margin-bottom: 4px;
+}
+.timeline-company { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.timeline-desc { font-size: 14px; color: rgba(232,237,242,0.6); line-height: 1.8; max-width: 640px; }
+
+/* ── AI TOOLS ── */
+#ai-tools { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.ai-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.ai-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 28px 24px;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: default;
+}
+.ai-card:hover {
+  border-color: var(--cyan);
+  background: var(--cyan-dim);
+  box-shadow: 0 0 20px var(--cyan-dim);
+}
+.ai-icon { font-size: 28px; margin-bottom: 12px; }
+.ai-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px; font-weight: 600;
+  color: var(--white); margin-bottom: 6px;
+}
+.ai-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* ── CONTACT ── */
+#contact { background: var(--bg); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.contact-links { display: flex; flex-direction: column; gap: 16px; }
+.contact-link-card {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 18px 22px;
+  text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.contact-link-card:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 16px var(--cyan-dim);
+}
+.contact-link-icon {
+  width: 36px; height: 36px;
+  background: var(--cyan-dim);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.contact-link-text { flex: 1; }
+.contact-link-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 3px;
+}
+.contact-link-val { font-size: 13px; color: var(--white); }
+.contact-link-arrow { color: var(--muted); font-size: 14px; transition: color 0.2s; }
+.contact-link-card:hover .contact-link-arrow { color: var(--cyan); }
+
+.contact-form-box { background: var(--bg3); border: 1px solid var(--border); padding: 36px; }
+.cf-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px; font-weight: 600;
+  margin-bottom: 24px; color: var(--white);
+}
+.cf-field { margin-bottom: 16px; }
+.cf-field label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--muted);
+  display: block; margin-bottom: 8px;
+}
+.cf-field input, .cf-field textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.cf-field input:focus, .cf-field textarea:focus { border-color: var(--cyan); }
+.cf-field input::placeholder, .cf-field textarea::placeholder { color: rgba(107,122,143,0.6); }
+.cf-field textarea { min-height: 100px; resize: none; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 36px 60px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-left {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--muted);
+}
+.footer-left span { color: var(--cyan); }
+.footer-right { font-size: 12px; color: var(--slate); }
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: var(--cyan); color: var(--bg);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.1em;
+  padding: 10px 24px; z-index: 999;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  nav { padding: 18px 24px; }
+  nav.scrolled { padding: 12px 24px; }
+  .nav-links { display: none; }
+  section { padding: 72px 24px; }
+  #hero { padding: 100px 24px 120px; }
+  .hero-stats { position: static; margin-top: 48px; flex-direction: row; gap: 32px; }
+  .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  .skills-grid { grid-template-columns: 1fr 1fr; }
+  .projects-bento { grid-template-columns: 1fr; }
+  .project-card.wide { grid-column: span 1; }
+  .ai-grid { grid-template-columns: 1fr 1fr; }
+  footer { flex-direction: column; text-align: center; padding: 28px 24px; }
+}
+@media (max-width: 560px) {
+  .skills-grid { grid-template-columns: 1fr; }
+  .ai-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">sk<span>@portfolio</span><span style="color:var(--cyan);animation:blink 1s step-end infinite">_</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#ai-tools">ai tools</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+  <a href="https://l1nk.dev/3ech10l" target="_blank" class="nav-hire">resume ↗</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-tag">Software Developer &amp; IoT Engineer</div>
+  <h1 class="hero-name">Subhranshu<br><span class="highlight">Kar.</span></h1>
+  <div class="hero-role">
+    <span id="typewriter"></span><span class="cursor"></span>
+  </div>
+  <p class="hero-desc">
+    B.Tech CSE graduate specialising in IoT — building everything from embedded systems to full-stack web apps, Web3 integrations, and AI-powered solutions on the cloud.
+  </p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-cyan">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Get In Touch
+    </a>
+    <a href="https://github.com/subhranshu2" target="_blank" class="btn-outline">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      GitHub
+    </a>
+    <a href="https://l1nk.dev/3ech10l" target="_blank" class="btn-outline">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Resume
+    </a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-num">12+</div>
+      <div class="hero-stat-lbl">Languages &amp; Frameworks</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">IoT</div>
+      <div class="hero-stat-lbl">Specialisation</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">GCP</div>
+      <div class="hero-stat-lbl">Cloud Platform</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="s-label">About Me</div>
+  <h2 class="s-title">Who I <em>am</em></h2>
+  <div class="about-grid reveal">
+    <div class="about-text">
+      <p>
+        I'm Subhranshu Kar, a Software Developer with a B.Tech in Computer Science &amp; Engineering specialising in the Internet of Things. I thrive at the intersection of hardware and software — connecting physical devices to intelligent, cloud-native applications.
+      </p>
+      <div class="about-highlight">
+        $ whoami<br>
+        → Developer · IoT Engineer · AI Enthusiast · Cloud Practitioner
+      </div>
+      <p>
+        My skill set spans the full development spectrum: from low-level C/C++ for embedded systems to modern JavaScript frameworks like React and Node.js for building scalable web applications. I've also explored the decentralised frontier with Web3.js and blockchain integration.
+      </p>
+      <p>
+        Beyond traditional development, I'm deeply interested in how AI tools and prompt engineering can accelerate workflows and unlock entirely new product categories. I leverage Google Cloud Platform to architect and deploy production-grade solutions.
+      </p>
+    </div>
+    <div>
+      <div class="about-card">
+        <div class="edu-item">
+          <div class="edu-degree">B.Tech — Computer Science &amp; Engineering</div>
+          <div class="edu-spec">// Specialisation: Internet of Things (IoT)</div>
+          <div class="edu-meta">Completed · India</div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="contact-row">
+          <div class="contact-icon">📞</div>
+          <a href="tel:+918917508445">+91-8917508445</a>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">✉️</div>
+          <a href="mailto:karsubhranshu4@gmail.com">karsubhranshu4@gmail.com</a>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </div>
+          <a href="https://github.com/subhranshu2" target="_blank">github.com/subhranshu2</a>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">📄</div>
+          <a href="https://l1nk.dev/3ech10l" target="_blank">View Resume / Drive</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="s-label">Technical Skills</div>
+  <h2 class="s-title">My <em>stack</em></h2>
+  <div class="skills-grid">
+    <div class="skill-group reveal">
+      <div class="skill-group-title">⚙️ Languages</div>
+      <div class="skill-chips">
+        <div class="chip">Python</div>
+        <div class="chip">Java</div>
+        <div class="chip">C</div>
+        <div class="chip">C++</div>
+        <div class="chip">C#</div>
+        <div class="chip">SQL</div>
+        <div class="chip">JavaScript</div>
+        <div class="chip">HTML</div>
+        <div class="chip">CSS</div>
+      </div>
+    </div>
+    <div class="skill-group reveal reveal-delay-1">
+      <div class="skill-group-title">🌐 Frameworks &amp; Libraries</div>
+      <div class="skill-chips">
+        <div class="chip">Node.js</div>
+        <div class="chip">React.js</div>
+        <div class="chip">Web3.js</div>
+        <div class="chip">Express.js</div>
+        <div class="chip">REST APIs</div>
+      </div>
+    </div>
+    <div class="skill-group reveal reveal-delay-2">
+      <div class="skill-group-title">☁️ Cloud &amp; DevOps</div>
+      <div class="skill-chips">
+        <div class="chip">GCP</div>
+        <div class="chip">Cloud Computing</div>
+        <div class="chip">Firebase</div>
+        <div class="chip">Deployment</div>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">🤖 AI &amp; Emerging Tech</div>
+      <div class="skill-chips">
+        <div class="chip">Prompt Engineering</div>
+        <div class="chip">ChatGPT</div>
+        <div class="chip">Claude AI</div>
+        <div class="chip">AI Integration</div>
+        <div class="chip">Web3 / Blockchain</div>
+      </div>
+    </div>
+    <div class="skill-group reveal reveal-delay-1">
+      <div class="skill-group-title">📡 IoT &amp; Embedded</div>
+      <div class="skill-chips">
+        <div class="chip">IoT Architecture</div>
+        <div class="chip">Embedded C</div>
+        <div class="chip">Sensors</div>
+        <div class="chip">Protocols</div>
+        <div class="chip">Edge Computing</div>
+      </div>
+    </div>
+    <div class="skill-group reveal reveal-delay-2">
+      <div class="skill-group-title">🛠 Tools &amp; Practices</div>
+      <div class="skill-chips">
+        <div class="chip">Git / GitHub</div>
+        <div class="chip">VS Code</div>
+        <div class="chip">Web Development</div>
+        <div class="chip">Databases</div>
+        <div class="chip">Agile</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="s-label">Projects</div>
+  <h2 class="s-title">What I've <em>built</em></h2>
+  <div class="projects-bento">
+    <div class="project-card wide reveal">
+      <span class="project-arrow">↗</span>
+      <div>
+        <div class="project-num">// 01</div>
+        <div class="project-name">IoT Smart Home Monitoring System</div>
+        <div class="project-desc">
+          A real-time home automation and monitoring platform using embedded sensors, MQTT protocol, and a cloud dashboard on GCP. Collects temperature, humidity, and motion data with live alerts and historical analytics.
+        </div>
+      </div>
+      <div class="project-tags">
+        <span class="project-tag">C++</span>
+        <span class="project-tag">Python</span>
+        <span class="project-tag">GCP</span>
+        <span class="project-tag">MQTT</span>
+        <span class="project-tag">IoT</span>
+      </div>
+    </div>
+    <div class="project-card reveal reveal-delay-1">
+      <span class="project-arrow">↗</span>
+      <div>
+        <div class="project-num">// 02</div>
+        <div class="project-name">Web3 DApp Interface</div>
+        <div class="project-desc">A decentralised application front-end integrating smart contracts via Web3.js with a React UI — enabling wallet connection, on-chain transactions, and live balance reads.</div>
+      </div>
+      <div class="project-tags">
+        <span class="project-tag">React.js</span>
+        <span class="project-tag">Web3.js</span>
+        <span class="project-tag">JavaScript</span>
+        <span class="project-tag">Blockchain</span>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <span class="project-arrow">↗</span>
+      <div>
+        <div class="project-num">// 03</div>
+        <div class="project-name">AI-Powered Task Assistant</div>
+        <div class="project-desc">A Node.js backend + React frontend that integrates the OpenAI API with custom prompt engineering to build a productivity assistant with context-aware task management.</div>
+      </div>
+      <div class="project-tags">
+        <span class="project-tag">Node.js</span>
+        <span class="project-tag">React.js</span>
+        <span class="project-tag">AI API</span>
+        <span class="project-tag">Prompts</span>
+      </div>
+    </div>
+    <div class="project-card reveal reveal-delay-1">
+      <span class="project-arrow">↗</span>
+      <div>
+        <div class="project-num">// 04</div>
+        <div class="project-name">Cloud-Native Web Portal</div>
+        <div class="project-desc">A full-stack web application deployed on Google Cloud Platform with auto-scaling, Cloud SQL backend, and a React dashboard — handling real-time data with high availability.</div>
+      </div>
+      <div class="project-tags">
+        <span class="project-tag">GCP</span>
+        <span class="project-tag">React.js</span>
+        <span class="project-tag">SQL</span>
+        <span class="project-tag">Node.js</span>
+      </div>
+    </div>
+    <div class="project-card wide reveal reveal-delay-2">
+      <span class="project-arrow">↗</span>
+      <div>
+        <div class="project-num">// 05</div>
+        <div class="project-name">Multi-Language Algorithm Library</div>
+        <div class="project-desc">
+          A personal open-source repository of data structures and algorithms implemented across Python, Java, C, C++, and C# — used as a reference for competitive programming and interview prep, with detailed complexity annotations.
+        </div>
+      </div>
+      <div class="project-tags">
+        <span class="project-tag">Python</span>
+        <span class="project-tag">Java</span>
+        <span class="project-tag">C</span>
+        <span class="project-tag">C++</span>
+        <span class="project-tag">C#</span>
+        <span class="project-tag">GitHub</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE / TIMELINE -->
+<section id="experience">
+  <div class="s-label">Journey</div>
+  <h2 class="s-title">My <em>timeline</em></h2>
+  <div class="timeline reveal">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2020 — 2024</div>
+      <div class="timeline-role">B.Tech in Computer Science &amp; Engineering</div>
+      <div class="timeline-company">Specialisation: Internet of Things (IoT)</div>
+      <div class="timeline-desc">Completed a four-year degree covering core CS fundamentals alongside specialised IoT coursework — embedded systems, sensor networks, cloud integration, and smart device protocols. Built multiple real-world projects bridging hardware and software.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2022 — Ongoing</div>
+      <div class="timeline-role">Full-Stack Web Development</div>
+      <div class="timeline-company">Self-directed · React · Node.js · Web3.js</div>
+      <div class="timeline-desc">Deepened expertise in modern JavaScript ecosystems — building full-stack applications with React frontends, Node.js backends, RESTful APIs, and exploring Web3/blockchain integrations for decentralised applications.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2023 — Ongoing</div>
+      <div class="timeline-role">Cloud Computing &amp; AI Engineering</div>
+      <div class="timeline-company">Google Cloud Platform · Prompt Engineering · AI Tools</div>
+      <div class="timeline-desc">Studied and practised cloud-native architecture on GCP — compute, storage, and managed services. In parallel, developed prompt engineering skills to build AI-augmented developer tooling using ChatGPT, Claude AI, and other LLMs.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">2024 — Present</div>
+      <div class="timeline-role">Software Developer</div>
+      <div class="timeline-company">Open to Opportunities · India</div>
+      <div class="timeline-desc">Actively building and shipping software projects — seeking full-time roles or freelance collaborations in full-stack development, IoT engineering, or AI-augmented product development. Available globally (remote).</div>
+    </div>
+  </div>
+</section>
+
+<!-- AI TOOLS -->
+<section id="ai-tools">
+  <div class="s-label">AI &amp; Emerging Tech</div>
+  <h2 class="s-title">Tools I <em>wield</em></h2>
+  <div class="ai-grid reveal">
+    <div class="ai-card">
+      <div class="ai-icon">🤖</div>
+      <div class="ai-name">ChatGPT</div>
+      <div class="ai-desc">Code generation, debugging assistance, and rapid prototyping with advanced prompt techniques.</div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-icon">⚡</div>
+      <div class="ai-name">Claude AI</div>
+      <div class="ai-desc">Long-context reasoning, document analysis, and building AI-powered features into web applications.</div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-icon">🔗</div>
+      <div class="ai-name">Prompt Engineering</div>
+      <div class="ai-desc">Systematic prompt design, chain-of-thought techniques, and AI workflow automation for real products.</div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-icon">☁️</div>
+      <div class="ai-name">Google Cloud</div>
+      <div class="ai-desc">Deploying scalable apps on GCP — Cloud Run, Cloud SQL, Firebase, and AI/ML APIs in production.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="s-label">Contact</div>
+  <h2 class="s-title">Let's <em>collaborate</em></h2>
+  <div class="contact-grid">
+    <div>
+      <p style="font-size:15px;color:var(--muted);line-height:1.9;margin-bottom:32px;">
+        Open to full-time roles, freelance projects, and collaborations in full-stack development, IoT, cloud architecture, or AI-augmented product engineering. Let's build something great together.
+      </p>
+      <div class="contact-links reveal">
+        <a href="mailto:karsubhranshu4@gmail.com" class="contact-link-card">
+          <div class="contact-link-icon">✉️</div>
+          <div class="contact-link-text">
+            <div class="contact-link-label">Email</div>
+            <div class="contact-link-val">karsubhranshu4@gmail.com</div>
+          </div>
+          <div class="contact-link-arrow">↗</div>
+        </a>
+        <a href="tel:+918917508445" class="contact-link-card">
+          <div class="contact-link-icon">📞</div>
+          <div class="contact-link-text">
+            <div class="contact-link-label">Phone</div>
+            <div class="contact-link-val">+91-8917508445</div>
+          </div>
+          <div class="contact-link-arrow">↗</div>
+        </a>
+        <a href="https://github.com/subhranshu2" target="_blank" class="contact-link-card">
+          <div class="contact-link-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#00D9FF"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </div>
+          <div class="contact-link-text">
+            <div class="contact-link-label">GitHub</div>
+            <div class="contact-link-val">github.com/subhranshu2</div>
+          </div>
+          <div class="contact-link-arrow">↗</div>
+        </a>
+        <a href="https://l1nk.dev/3ech10l" target="_blank" class="contact-link-card">
+          <div class="contact-link-icon">📄</div>
+          <div class="contact-link-text">
+            <div class="contact-link-label">Resume / Portfolio Drive</div>
+            <div class="contact-link-val">l1nk.dev/3ech10l</div>
+          </div>
+          <div class="contact-link-arrow">↗</div>
+        </a>
+      </div>
+    </div>
+    <div class="contact-form-box reveal reveal-delay-1">
+      <div class="cf-title">Send a message</div>
+      <div class="cf-field">
+        <label>Your Name</label>
+        <input type="text" placeholder="Jane Smith">
+      </div>
+      <div class="cf-field">
+        <label>Email Address</label>
+        <input type="email" placeholder="jane@company.com">
+      </div>
+      <div class="cf-field">
+        <label>Message</label>
+        <textarea placeholder="Tell me about your project or opportunity..."></textarea>
+      </div>
+      <button class="btn-cyan" onclick="sendMsg()" style="width:100%;justify-content:center;margin-top:4px">
+        Send Message →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <span>Subhranshu Kar</span> · Software Developer · Built with ♥ and lots of <span>{ code }</span>
+  </div>
+  <div class="footer-right">© 2025 · Open to opportunities</div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CURSOR GLOW ──
+document.addEventListener('mousemove', (e) => {
+  const glow = document.getElementById('cursorGlow');
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+});
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ── TYPEWRITER ──
+const roles = [
+  'Software Developer',
+  'IoT Engineer',
+  'Full-Stack Developer',
+  'Web3 Developer',
+  'Cloud Practitioner',
+  'AI Enthusiast',
+  'Prompt Engineer'
+];
+let roleIdx = 0, charIdx = 0, deleting = false;
+const tw = document.getElementById('typewriter');
+
+function type() {
+  const current = roles[roleIdx];
+  if (!deleting) {
+    tw.textContent = current.slice(0, ++charIdx);
+    if (charIdx === current.length) {
+      deleting = true;
+      setTimeout(type, 1800);
+      return;
+    }
+  } else {
+    tw.textContent = current.slice(0, --charIdx);
+    if (charIdx === 0) {
+      deleting = false;
+      roleIdx = (roleIdx + 1) % roles.length;
+    }
+  }
+  setTimeout(type, deleting ? 55 : 95);
+}
+setTimeout(type, 800);
+
+// ── SCROLL REVEAL ──
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function sendMsg() { showToast('Message sent! Subhranshu will reply soon.'); }
+
+// ── ESCAPE KEY ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('toast').classList.remove('show');
+});
+</script>
+</body>
+</html>
